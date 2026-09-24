@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Registration</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        input,
+        select,
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .highlight {
+            border: 2px solid green;
+        }
+
+        li {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #eee;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="container">
+
+        <h1 id="title">Student Registration</h1>
+
+        <!-- Registration Form -->
+        <form id="studentForm">
+
+            <label for="name">Student Name</label>
+
+            <input type="text" id="name" placeholder="Enter student name">
+
+            <label for="course">Course</label>
+
+            <select id="course">
+
+                <option value="">Select a course</option>
+
+                <option value="JavaScript">
+                    JavaScript
+                </option>
+
+                <option value="Python">
+                    Python
+                </option>
+
+                <option value="HTML/CSS">
+                    HTML/CSS
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Register Student
+            </button>
+
+        </form>
+
+        <p id="message"></p>
+
+        <h2>Registered Students</h2>
+
+        <ul id="studentList">
+            <li>John</li>
+            <li>Mary</li>
+        </ul>
+
+        <button id="clearButton">
+            Clear Students
+        </button>
+
+    </div>
+
+
+    <script>
+
+
+        // 1. SELECTING DOM ELEMENTS
+        // =========================================================
+
+        const container = document.getElementById("container");
+
+        const form = document.getElementById("studentForm");
+
+        const nameInput = document.getElementById("name");
+
+        const courseSelect = document.getElementById("course");
+
+        const message = document.getElementById("message");
+
+        const studentList = document.getElementById("studentList");
+
+        const clearButton = document.getElementById("clearButton");
+
+        const title = document.getElementById("title");
+
+
+        // =========================================================
+        // 2. CLICK EVENT
+        // =========================================================
+
+        clearButton.addEventListener("click", function (event) {
+
+            console.log("Clear button clicked");
+
+            // event.target
+            console.log("Target:", event.target);
+
+            // event.currentTarget
+            console.log("Current Target:", event.currentTarget);
+
+            studentList.innerHTML = "";
+
+            message.textContent = "Student list cleared.";
+
+            message.classList.add("success");
+
+        });
+
+
+        // 3. INPUT EVENT
+
+        nameInput.addEventListener("input", function (event) {
+
+            console.log("User is typing");
+
+            // event.target is the input element
+            console.log("Input value:", event.target.value);
+
+            if (event.target.value.length >= 3) {
+
+                event.target.classList.add("highlight");
+
+            } else {
+
+                event.target.classList.remove("highlight");
+
+            }
+
+        });
+
+
+        // =========================================================
+        // 4. CHANGE EVENT
+        // =========================================================
+
+        courseSelect.addEventListener("change", function (event) {
+
+            console.log("Course changed");
+
+            console.log("Selected course:", event.target.value);
+
+            message.textContent =
+                "You selected: " + event.target.value;
+
+        });
+
+
+        // =========================================================
+        // 5. SUBMIT EVENT
+        // =========================================================
+
+        form.addEventListener("submit", function (event) {
+
+            // Prevent the browser from refreshing/submitting
+            // the form normally.
+            event.preventDefault();
+
+            console.log("Form submitted");
+
+
+            // Get values
+            const studentName = nameInput.value.trim();
+
+            const course = courseSelect.value;
+
+
+            // =====================================================
+            // FORM VALIDATION
+            // =====================================================
+
+            if (studentName === "") {
+
+                message.textContent =
+                    "Please enter the student's name.";
+
+                message.classList.remove("success");
+
+                message.classList.add("error");
+
+                return;
+            }
+
+
+            if (course === "") {
+
+                message.textContent =
+                    "Please select a course.";
+
+                message.classList.remove("success");
+
+                message.classList.add("error");
+
+                return;
+            }
+
+
+            // =====================================================
+            // CREATE NEW DOM ELEMENT
+            // =====================================================
+
+            const newStudent = document.createElement("li");
+
+
+            // Add student information
+            newStudent.textContent =
+                studentName + " - " + course;
+
+
+            // Add the new student to the list
+            studentList.appendChild(newStudent);
+
+
+            // =====================================================
+            // SUCCESS MESSAGE
+            // =====================================================
+
+            message.textContent =
+                "Student registered successfully!";
+
+            message.classList.remove("error");
+
+            message.classList.add("success");
+
+
+            // Clear the form
+            form.reset();
+
+        });
+
+
+        // =========================================================
+        // 6. EVENT BUBBLING
+        // =========================================================
+
+        studentList.addEventListener("click", function (event) {
+
+            console.log("Student list clicked");
+
+            console.log("Target:", event.target);
+
+            console.log("Current Target:", event.currentTarget);
+
+        });
+
+
+        // =========================================================
+        // 7. EVENT DELEGATION
+        // =========================================================
+
+        studentList.addEventListener("click", function (event) {
+
+            // Check whether the clicked element is an <li>
+            if (event.target.tagName === "LI") {
+
+                console.log(
+                    "You clicked student:",
+                    event.target.textContent
+                );
+
+                event.target.style.textDecoration = "line-through";
+
+            }
+
+        });
+
+
+        // =========================================================
+        // 8. STOP PROPAGATION
+        // =========================================================
+
+        studentList.addEventListener("click", function (event) {
+
+            if (event.target.tagName === "LI") {
+
+                console.log("Student clicked");
+
+                // Stop the event from continuing upward
+                event.stopPropagation();
+
+            }
+
+        });
+
+
+        // =========================================================
+        // 9. BUBBLING ON THE CONTAINER
+        // =========================================================
+
+        container.addEventListener("click", function (event) {
+
+            console.log("Container received click");
+
+        });
+
+
+        // =========================================================
+        // 10. CAPTURING
+        // =========================================================
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                console.log("Document capturing phase");
+
+            },
+            true
+        );
+
+
+        // =========================================================
+        // 11. MOUSEOVER EVENT
+        // =========================================================
+
+        title.addEventListener("mouseover", function (event) {
+
+            title.style.fontSize = "32px";
+
+        });
+
+
+        // =========================================================
+        // 12. MOUSEOUT EVENT
+        // =========================================================
+
+        title.addEventListener("mouseout", function (event) {
+
+            title.style.fontSize = "24px";
+
+        });
+
+
+        // =========================================================
+        // 13. KEYBOARD EVENT
+        // =========================================================
+
+        nameInput.addEventListener("keydown", function (event) {
+
+            console.log("Key pressed:", event.key);
+
+            if (event.key === "Enter") {
+
+                console.log("Enter key pressed");
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
